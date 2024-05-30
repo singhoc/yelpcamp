@@ -19,7 +19,7 @@ const User = require('./models/user');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const MongoStore = require('connect-mongo');
-const dbURL= 'mongodb://localhost:27017/yelp-camp';//process.env.DB_URL;//
+const dbURL= process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';//
 
 const campgroundRoutes = require('./routes/campground'); //for campground routes
 const reviewRoutes = require('./routes/reviews'); //for reviews routes
@@ -42,11 +42,13 @@ app.use(methodOverride('_method'));//method overide for delete, update
 app.use(express.static(path.join(__dirname, 'public')));//serving static files
 app.use(mongoSanitize());//for protection against mongo injection
 
+const secret = process.env.SECRET || 'this should be a better secret!';
+
 const store = MongoStore.create({
     mongoUrl: dbURL,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'this should be a better secret!'
+        secret 
     }
 });
 
@@ -58,7 +60,7 @@ store.on("error",(e)=>{
 const sessionConfig = {
     store,
     name: 'session',
-    secret: 'this should be a better secret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -153,7 +155,7 @@ app.use((err, req, res, next) => {
 
 })
 
-
-app.listen(3000, () => {
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
     console.log("Listening on port 3000");
 })
