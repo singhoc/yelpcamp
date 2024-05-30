@@ -30,7 +30,7 @@ module.exports.viewCamp = async (req, res) => {
 module.exports.createCamp = async (req, res) => {
     //if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400)
     const geoData = await geocoder.forwardGeocode({
-        query: 'yosemite,CA',
+        query: req.body.campground.location,
         limit: 1
     }).send()
 
