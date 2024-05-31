@@ -15,6 +15,7 @@ router.route('/')
 
 
 router.get('/new', isLoggedIn, camp.newCampForm);
+router.get('/search', camp.searchCamp);
 
 router.route('/:id')
     .get(catchAsync(camp.viewCamp))

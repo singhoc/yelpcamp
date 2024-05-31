@@ -27,6 +27,17 @@ module.exports.viewCamp = async (req, res) => {
     res.render('campgrounds/show', { campground });
 }
 
+module.exports.searchCamp = async (req, res) => {
+    const searchQuery = req.query.search || '';
+    const campgrounds = await Campground.find({
+        $or: [
+            { title: new RegExp(searchQuery, 'i') },
+            { location: new RegExp(searchQuery, 'i') }
+        ]
+    });
+    res.render('campgrounds/search', { campgrounds, searchQuery });
+}
+
 module.exports.createCamp = async (req, res) => {
     //if (!req.body.campground) throw new ExpressError('Invalid Campground Data', 400)
     const geoData = await geocoder.forwardGeocode({
